@@ -43,7 +43,7 @@ def getFoodGroupsDataMonthly():
     #dateToday = datetime.today()
     dateToday = date.fromisoformat("2023-11-23")
     datetimeToday = datetime.fromisoformat(dateToday.isoformat())
-    datetimeLastMonth = datetimeToday - timedelta(weeks=4)
+    datetimeLastMonth = datetimeToday - timedelta(weeks=10)
     pipeline = [
     { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeLastMonth}}}, 
     {'$unwind': '$foodgroups'}, 
@@ -144,3 +144,52 @@ def getAvgIntakeData1Year():
     df = df.sort_values(by='date')
 
     return(df)
+
+def getIntakeCountDaily():
+    #dateToday = date.today()
+    dateToday = date.fromisoformat("2023-11-23")
+    
+    pipeline = [
+        { '$match': {'date': dateToday.isoformat()}},  
+        {'$project': {
+            "waterglass": "$waterglass",
+            "sleephrs": "$sleephrs",
+            "dailycal": "$dailycal",
+            "steps": "$steps",
+            }}]
+
+    return((intakes.aggregate_pandas_all(pipeline,
+    schema=Schema({'waterglass': int, 'sleephrs': float, 'dailycal': int, 'steps': int}))))
+
+def getIntakeCountWeekly():
+    #dateToday = date.today()
+    dateToday = date.fromisoformat("2023-11-23")
+    dateLastWeek = dateToday - timedelta(days=7)
+    
+    pipeline = [
+        { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateLastWeek.isoformat()}}},  
+        {'$project': {
+            "waterglass": "$waterglass",
+            "sleephrs": "$sleephrs",
+            "dailycal": "$dailycal",
+            "steps": "$steps",
+            }}]
+
+    return((intakes.aggregate_pandas_all(pipeline,
+    schema=Schema({'waterglass': int, 'sleephrs': float, 'dailycal': int, 'steps': int}))))
+
+def getIntakeCountMonthly():
+    #dateToday = date.today()
+    dateToday = date.fromisoformat("2023-11-23")
+    dateLastMonth = dateToday - timedelta(days=28)
+    pipeline = [
+        { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateLastMonth.isoformat()}}},  
+        {'$project': {
+            "waterglass": "$waterglass",
+            "sleephrs": "$sleephrs",
+            "dailycal": "$dailycal",
+            "steps": "$steps",
+            }}]
+
+    return((intakes.aggregate_pandas_all(pipeline,
+    schema=Schema({'waterglass': int, 'sleephrs': float, 'dailycal': int, 'steps': int}))))
