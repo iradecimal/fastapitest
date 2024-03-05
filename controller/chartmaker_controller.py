@@ -35,3 +35,6 @@ def makeAvgIntakeGraphs(df: DataFrame) -> list:
 def makeHistograms(x: Series, color: str, xaxis: str) -> go.Figure:
     fig = go.Figure(go.Histogram(x=x, marker_color=color))
     fig.update_layout(xaxis_title=xaxis)
+
+def makeTrendLine(df: DataFrame, n_pred: int):
+    return 1

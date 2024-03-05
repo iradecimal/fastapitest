@@ -1,6 +1,10 @@
 from db import intakes, meals, users
 from datetime import date, datetime, timedelta
 from bson.json_util import loads, dumps
+from pymongoarrow.api import Schema
+
+AvgIntakeSchema = Schema({'hale': float, 'phd': float, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
+AvgFoodSchema = Schema({'fat': float, 'carbs': float, 'protein': float, 'cal': float, 'waste': float})
 
 def getIntakeStatsDaily():
     #dateToday = date.today().isoformat()

@@ -3,6 +3,11 @@ from datetime import date, datetime, timedelta
 import pandas as pd
 from pymongoarrow.api import Schema
 
+# Schemas shared between several functions
+FoodGroupsSchema = Schema({'_id': str, 'count': int})
+AvgIntakeSchema = Schema({'_id': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
+IntakeCountsSchema =Schema({'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
+
 def getFoodGroupsDataDaily():
     #dateToday = datetime.today()
     dateToday = date.fromisoformat("2023-11-23")
@@ -15,8 +20,7 @@ def getFoodGroupsDataDaily():
             '_id': '$foodgroups', 
             'count': {'$sum': 1}
             }}]
-    df = (meals.aggregate_pandas_all(pipeline,
-    schema=Schema({'_id': str, 'count': int})))
+    df = (meals.aggregate_pandas_all(pipeline, schema = FoodGroupsSchema))
     df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
 
     return df
@@ -33,8 +37,7 @@ def getFoodGroupsDataWeekly():
             '_id': '$foodgroups', 
             'count': {'$sum': 1}
             }}]
-    df = (meals.aggregate_pandas_all(pipeline,
-    schema=Schema({'_id': str, 'count': int})))
+    df = (meals.aggregate_pandas_all(pipeline,  schema = FoodGroupsSchema))
     df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
 
     return df
@@ -51,8 +54,7 @@ def getFoodGroupsDataMonthly():
             '_id': '$foodgroups', 
             'count': {'$sum': 1}
             }}]
-    df = (meals.aggregate_pandas_all(pipeline,
-    schema=Schema({'_id': str, 'count': int})))
+    df = (meals.aggregate_pandas_all(pipeline,  schema = FoodGroupsSchema))
     df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
 
     return(df)
@@ -70,9 +72,7 @@ def getAvgIntakeData1Month():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    df = (intakes.aggregate_pandas_all(pipeline,
-    schema=Schema({'_id': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
-    ))
+    df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
     df = df.rename(columns={'_id':'date'})
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
     df = df.sort_values(by='date')
@@ -92,9 +92,7 @@ def getAvgIntakeData3Month():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    df = (intakes.aggregate_pandas_all(pipeline,
-    schema=Schema({'_id': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
-    ))
+    df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
     df = df.rename(columns={'_id':'date'})
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
     df = df.sort_values(by='date')
@@ -114,9 +112,7 @@ def getAvgIntakeData6Month():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    df = (intakes.aggregate_pandas_all(pipeline,
-    schema=Schema({'_id': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
-    ))
+    df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
     df = df.rename(columns={'_id':'date'})
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
     df = df.sort_values(by='date')
@@ -136,9 +132,7 @@ def getAvgIntakeData1Year():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    df = (intakes.aggregate_pandas_all(pipeline,
-    schema=Schema({'_id': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
-    ))
+    df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
     df = df.rename(columns={'_id':'date'})
     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
     df = df.sort_values(by='date')
@@ -158,8 +152,7 @@ def getIntakeCountDaily():
             "steps": "$steps",
             }}]
 
-    return((intakes.aggregate_pandas_all(pipeline,
-    schema=Schema({'waterglass': int, 'sleephrs': float, 'dailycal': int, 'steps': int}))))
+    return((intakes.aggregate_pandas_all(pipeline, schema = IntakeCountsSchema)))
 
 def getIntakeCountWeekly():
     #dateToday = date.today()
@@ -175,8 +168,7 @@ def getIntakeCountWeekly():
             "steps": "$steps",
             }}]
 
-    return((intakes.aggregate_pandas_all(pipeline,
-    schema=Schema({'waterglass': int, 'sleephrs': float, 'dailycal': int, 'steps': int}))))
+    return((intakes.aggregate_pandas_all(pipeline, schema = IntakeCountsSchema)))
 
 def getIntakeCountMonthly():
     #dateToday = date.today()
@@ -191,5 +183,4 @@ def getIntakeCountMonthly():
             "steps": "$steps",
             }}]
 
-    return((intakes.aggregate_pandas_all(pipeline,
-    schema=Schema({'waterglass': int, 'sleephrs': float, 'dailycal': int, 'steps': int}))))
+    return((intakes.aggregate_pandas_all(pipeline, schema = IntakeCountsSchema)))
