@@ -20,7 +20,7 @@ def getIntakeStatsDaily():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    find = list(intakes.aggregate(pipeline)) 
+    find = (intakes.aggregate(pipeline)) 
     return(loads(dumps(find)))
 
 def getIntakeStatsWeekly():

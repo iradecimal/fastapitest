@@ -1,6 +1,7 @@
 from bson.json_util import loads
-from .chartmaker_controller import makeFoodGroupBar, makeAvgIntakeGraphs, makeHistograms
-from .chartdata_controller import getFoodGroupsDataDaily, getFoodGroupsDataWeekly, getFoodGroupsDataMonthly, getAvgIntakeData1Month, getAvgIntakeData3Month, getAvgIntakeData6Month, getAvgIntakeData1Year, getIntakeCountDaily, getIntakeCountWeekly, getIntakeCountMonthly
+from .chartmaker_controller import makeFoodGroupBar, makeAvgIntakeGraphs, makeIntakeHistograms, makeFoodHistograms 
+from .chartdata_controller import getFoodGroupsDataDaily, getFoodGroupsDataWeekly, getFoodGroupsDataMonthly, getAvgIntakeData1Month, getAvgIntakeData3Month, getAvgIntakeData6Month, getIntakeCountDaily, getIntakeCountWeekly, getIntakeCountMonthly, getMealStatsDaily, getMealStatsMonthly, getMealStatsWeekly
+
 
 def getFoodGroupsDaily():
     df = getFoodGroupsDataDaily()
@@ -22,43 +23,54 @@ def getFoodGroupsMonthly():
 
 def getAvgIntake1Month():
     df = getAvgIntakeData1Month()
-    data = makeAvgIntakeGraphs(df)
+    charts = makeAvgIntakeGraphs(df)
 
-    return(data)
+    return(charts)
 
 def getAvgIntake3Month():
     df = getAvgIntakeData3Month()
-    data = makeAvgIntakeGraphs(df)
+    charts = makeAvgIntakeGraphs(df)
 
-    return(data)
+    return(charts)
 
 def getAvgIntake6Month():
     df = getAvgIntakeData6Month()
-    data = makeAvgIntakeGraphs(df)
+    charts = makeAvgIntakeGraphs(df)
 
-    return(data)
-
-def getAvgIntake1Year():
-    df = getAvgIntakeData1Year()
-    data = makeAvgIntakeGraphs(df)
-
-    return(data)
+    return(charts)
 
 def getIntakeCountDaily():
     df = getIntakeCountDaily()
-    data = makeHistograms(df)
+    charts = makeIntakeHistograms(df)
 
-    return data
+    return charts
 
 def getIntakeCountWeekly():
     df = getIntakeCountWeekly()
-    data = makeHistograms(df)
+    charts = makeIntakeHistograms(df)
 
-    return data
+    return charts
 
 def getIntakeCountMonthly():
     df = getIntakeCountMonthly() 
-    data = makeHistograms(df)
+    charts = makeIntakeHistograms(df)
 
-    return data
+    return charts
 
+def getMealCountDaily():
+    df = getMealStatsDaily()
+    charts = makeFoodHistograms(df)
+
+    return charts
+
+def getMealCountWeekly():
+    df = getMealStatsWeekly()
+    charts = makeFoodHistograms(df)
+
+    return charts
+
+def getMealCountMonthly():
+    df = getMealStatsMonthly()
+    charts = makeFoodHistograms(df)
+
+    return charts
