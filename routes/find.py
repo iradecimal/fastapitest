@@ -3,7 +3,7 @@ from typing import Annotated
 from dateutil.parser import isoparse
 from bson.objectid import ObjectId
 from db import intakes, meals
-from bson.json_util import loads, dumps
+from bson.json_util import dumps
 from pymongo import ASCENDING, DESCENDING
 import json
 import re

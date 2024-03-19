@@ -9,24 +9,24 @@ router = APIRouter(
 async def get_daily_intake_stats():
     return getIntakeStatsDaily()
 
-@router.get("/daily/meals")
-async def get_daily_meal_stats():
-    return getIntakeStatsWeekly()
-
 @router.get("/weekly/intake")
-async def get_daily_intake_stats():
-    return getIntakeStatsMonthly()
-
-@router.get("/weekly/meals")
-async def get_daily_meal_stats():
+async def get_weekly_intake_stats():
     return getMealStatsDaily()
 
 @router.get("/monthly/intake")
-async def get_daily_intake_stats():
+async def get_monthly_intake_stats():
+    return getIntakeStatsMonthly()
+
+@router.get("/daily/meals")
+async def get_daily_meal_stats():
+    return getMealStatsDaily()
+
+@router.get("/weekly/meals")
+async def get_weekly_intake_stats():
     return getMealStatsWeekly()
 
 @router.get("/monthly/meals")
-async def get_daily_meal_stats():
+async def get_monthly_meal_stats():
     return getMealStatsMonthly()
 
 @router.get("/activity")
