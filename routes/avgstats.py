@@ -11,7 +11,7 @@ async def get_daily_intake_stats():
 
 @router.get("/weekly/intake")
 async def get_weekly_intake_stats():
-    return getMealStatsDaily()
+    return getIntakeStatsWeekly()
 
 @router.get("/monthly/intake")
 async def get_monthly_intake_stats():

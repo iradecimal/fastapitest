@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from controller.charts_controller import getFoodGroupsDaily, getFoodGroupsWeekly, getFoodGroupsMonthly, getAvgIntake1Month, getAvgIntake3Month, getAvgIntake6Month, getIntakeCountDaily, getIntakeCountWeekly, getIntakeCountMonthly
+from controller.charts_controller import getFoodGroupsDaily, getFoodGroupsWeekly, getFoodGroupsMonthly, getAvgIntake1Month, getAvgIntake3Month, getAvgIntake6Month, getIntakePlotDaily, getIntakePlotWeekly, getIntakePlotMonthly, getMealCountDaily, getMealCountWeekly, getMealCountMonthly
 
 router = APIRouter(
     prefix="/charts"
@@ -31,12 +31,24 @@ async def get_6month_avg_intake():
 
 @router.get("/intakecount/daily")
 async def get_intake_count_daily():
-    return getIntakeCountDaily()
+    return getIntakePlotDaily()
 
 @router.get("/intakecount/weekly")
 async def get_intake_count_weekly():
-    return getIntakeCountWeekly()
+    return getIntakePlotWeekly()
 
 @router.get("/intakecount/monthly")
 async def get_intake_count_monthly():
-    return getIntakeCountMonthly()
+    return getIntakePlotMonthly()
+
+@router.get("/mealcount/daily")
+async def get_meal_count_daily():
+    return getMealCountDaily()
+
+@router.get("/mealcount/weekly")
+async def get_meal_count_weekly():
+    return getMealCountWeekly()
+
+@router.get("/mealcount/monthly")
+async def get_meal_count_monthly():
+    return getMealCountMonthly()

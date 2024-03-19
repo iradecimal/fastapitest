@@ -9,9 +9,9 @@ def makeFoodGroupBar(df: DataFrame, x: str, y: str, orient: str, color: str, yax
 
     return fig
 
-def makeAvgIntakeBar(x: Series, y: Series, color: str, xaxis: str, yaxis: str) -> go.Figure: 
+def makeAvgIntakeBar(x: Series, y: Series, color: str, xaxis: str) -> go.Figure: 
     fig = go.Figure(go.Bar(x=x, y=y, marker_color=color))
-    fig.update_layout(xaxis_title=xaxis, yaxis_title=yaxis)
+    fig.update_layout(xaxis_title=xaxis, yaxis_title="Count")
 
     return fig
 
@@ -39,13 +39,10 @@ def makeAvgIntakeGraphs(df: DataFrame) -> list:
     return(data)
 
 def makeIntakeHistograms(df: DataFrame) -> list:
-    figdailycal = makeHistogram(df, "dailycal", 'rgb(46, 184, 46)', "Caloric Intake")
-
-    figsleep = makeHistogram(df, "sleephrs", 'rgb(119, 51, 255)', "Hours of Sleep")
-
-    figwater = makeHistogram(df, "waterglass", 'rgb(0, 172, 230)', "Water Intake in Glasses")
-
-    figsteps = makeHistogram(df, "steps", 'rgb(51, 204, 51)', "Steps Taken Daily")
+    figdailycal = makeHistogram(df, "dailycal", ['rgb(46, 184, 46)'], "Caloric Intake")
+    figsleep = makeHistogram(df, "sleephrs", ['rgb(119, 51, 255)'], "Hours of Sleep")
+    figwater = makeHistogram(df, "waterglass", ['rgb(0, 172, 230)'], "Water Intake in Glasses")
+    figsteps = makeHistogram(df, "steps", ['rgb(51, 204, 51)'], "Steps Taken Daily")
 
     data = [{
          "dailycalplot": loads(figdailycal.to_json()),
@@ -56,11 +53,11 @@ def makeIntakeHistograms(df: DataFrame) -> list:
     return(data)
 
 def makeFoodHistograms(df: DataFrame) -> list:
-    figfat = makeHistogram(df, "fat", "", "Fat Intake")
-    figcarbs = makeHistogram(df, "carbs", "", "Fat Intake")
-    figproteins = makeHistogram(df, "proteins", "", "Fat Intake")
-    figcal = makeHistogram(df, "cal", "", "Fat Intake")
-    figwaste = makeHistogram(df, "waste", "", "Fat Intake")
+    figfat = makeHistogram(df, "fat", ['rgb(255, 153, 0)'], "Fat Intake")
+    figcarbs = makeHistogram(df, "carbs", ['rgb(115, 230, 0)'], "Carb Intake")
+    figproteins = makeHistogram(df, "proteins", ['rgb(179, 36, 0)'], "Protein Intake")
+    figcal = makeHistogram(df, "cal", ['rgb(77, 136, 255)'], "Calories per Meal")
+    figwaste = makeHistogram(df, "waste", ['rgb(102, 0, 51)'], "Waste")
 
     data = [{
         "fatplot": loads(figfat.to_json()),

@@ -8,9 +8,9 @@ import pmdarima as pm
 
 def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: str, yaxis: str) -> go.Figure:
     arima = pm.auto_arima(df[column], start_p=1, start_q=1,
-        max_p=3, max_q=3, m=12,
+        max_p=3, max_q=3, m=7,
         start_P=0, seasonal=True,
-        d=1, D=1, trace=False,
+        d=1, D=0, trace=1,
         error_action='ignore',  # don't want to know if an order does not work
         suppress_warnings=True,  # don't want convergence warnings
         stepwise=True
@@ -32,14 +32,14 @@ def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: 
     return figpred
 
 def makeIntakePredictions(df: DataFrame, interval: int) -> list:
+    print("cal")
     figdailycal = PredictTrends(df, "dailycal", interval, 'rgb(46, 184, 46)', "Caloric Intake", "calories")
-    figdailycal.show()
+    print("sleep")
     figsleep = PredictTrends(df, "sleephrs", interval, 'rgb(119, 51, 255)', "Hours of Sleep", "hours")
-    figsleep.show()
+    print("water")
     figwater = PredictTrends(df, "waterglass", interval, 'rgb(0, 172, 230)', "Water Intake in Glasses", "glasses")
-    figwater.show()
+    print("steps")
     figsteps = PredictTrends(df, "steps", interval, 'rgb(51, 204, 51)', "Steps Taken Daily", "steps")
-    figsteps.show()
     data = [{
          "dailycalplot": loads(figdailycal.to_json()),
          "sleepplot": loads(figsleep.to_json()),
