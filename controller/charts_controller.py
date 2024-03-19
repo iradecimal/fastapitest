@@ -2,7 +2,6 @@ from bson.json_util import loads
 from .chartmaker_controller import makeFoodGroupBar, makeAvgIntakeGraphs, makeIntakeHistograms, makeFoodHistograms 
 from .chartdata_controller import getFoodGroupsDataDaily, getFoodGroupsDataWeekly, getFoodGroupsDataMonthly, getAvgIntakeDataWeek, getAvgIntakeData1Month, getAvgIntakeData3Month,  getIntakeCountDaily, getIntakeCountWeekly, getIntakeCountMonthly, getMealStatsDaily, getMealStatsMonthly, getMealStatsWeekly
 
-
 def getFoodGroupsDaily():
     df = getFoodGroupsDataDaily()
     fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group", "Food Groups")

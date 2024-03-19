@@ -82,7 +82,7 @@ def getFoodGroupsDataMonthly():
 def getAvgIntakeDataWeek():
     #dateToday = date.today()
     dateToday = date.fromisoformat("2023-11-23")
-    dateLastMonth = dateToday - timedelta(weeks=4)
+    dateLastMonth = dateToday - timedelta(weeks=1)
     pipeline = [
         { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateLastMonth.isoformat()}}},
         avgintakegroup
