@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from controller.charts_controller import getFoodGroupsDaily, getFoodGroupsWeekly, getFoodGroupsMonthly, getAvgIntakeWeek, getAvgIntake1Month, getAvgIntake3Month, getIntakePlotDaily, getIntakePlotWeekly, getIntakePlotMonthly, getMealCountDaily, getMealCountWeekly, getMealCountMonthly
 
 router = APIRouter(
-    prefix="/charts"
+    prefix = "/charts"
 )
 
 @router.get("/foodgroups/daily")

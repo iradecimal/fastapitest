@@ -35,7 +35,7 @@ foodcountproject = { '$project': {
             'proteins': '$proteins',
             'cal': '$cal',
             'waste': '$waste',
-        }}
+}}
 
 def getFoodGroupsDataDaily():
     #dateToday = datetime.today()
@@ -69,7 +69,7 @@ def getFoodGroupsDataMonthly():
     #dateToday = datetime.today()
     dateToday = date.fromisoformat("2023-11-23")
     datetimeToday = datetime.fromisoformat(dateToday.isoformat())
-    datetimeLastMonth = datetimeToday - timedelta(weeks=10)
+    datetimeLastMonth = datetimeToday - timedelta(weeks=4)
     pipeline = [
         { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeLastMonth}}}, 
         {'$unwind': '$foodgroups'}, foodgroup
@@ -148,7 +148,7 @@ def getIntakeCountWeekly():
 def getIntakeCountMonthly():
     #dateToday = date.today()
     dateToday = date.fromisoformat("2023-11-23")
-    dateLastMonth = dateToday - timedelta(days=28)
+    dateLastMonth = dateToday - timedelta(weeks=4)
     pipeline = [
         { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateLastMonth.isoformat()}}},  
         intakecountproject
@@ -184,7 +184,7 @@ def getMealStatsMonthly():
     #dateToday = datetime.today()
     dateToday = date.fromisoformat("2023-11-23")
     datetimeToday = datetime.fromisoformat(dateToday.isoformat())
-    datetimeLastMonth = datetimeToday - timedelta(weeks=10)
+    datetimeLastMonth = datetimeToday - timedelta(weeks=4)
     pipeline = [
         { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeLastMonth}}},   
         foodcountproject
