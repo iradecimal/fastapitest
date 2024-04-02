@@ -7,7 +7,7 @@ from routes import avgstats, charts, trends, find, sex
 
 app = FastAPI()
 
-origins = ["https://localhost:4000"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,

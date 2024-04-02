@@ -38,7 +38,7 @@ def getIntakeStatsWeekly():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    find = list(intakes.aggregate(pipeline)) 
+    find = (intakes.aggregate(pipeline)) 
     return(loads(dumps(find)))
 
 
@@ -57,7 +57,7 @@ def getIntakeStatsMonthly():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    find = list(intakes.aggregate(pipeline)) 
+    find = (intakes.aggregate(pipeline)) 
     return(loads(dumps(find)))
 
 def getMealStatsDaily():
@@ -75,7 +75,7 @@ def getMealStatsDaily():
             'cal': {'$avg': '$cal'},
             'waste': {'$avg': '$waste'},
         }}]
-    find = list(meals.aggregate(pipeline)) 
+    find = (meals.aggregate(pipeline)) 
     return(loads(dumps(find)))
 
 
@@ -94,7 +94,7 @@ def getMealStatsWeekly():
             'cal': {'$avg': '$cal'},
             'waste': {'$avg': '$waste'},
         }}]
-    find = list(meals.aggregate(pipeline)) 
+    find = (meals.aggregate(pipeline)) 
     return(loads(dumps(find)))
 
 def getMealStatsMonthly():
@@ -112,5 +112,5 @@ def getMealStatsMonthly():
             'cal': {'$avg': '$cal'},
             'waste': {'$avg': '$waste'},
         }}]
-    find = list(meals.aggregate(pipeline)) 
+    find = (meals.aggregate(pipeline)) 
     return(loads(dumps(find)))
