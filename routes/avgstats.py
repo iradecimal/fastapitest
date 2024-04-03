@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from controller.avgstats_controller import getIntakeStatsDaily, getIntakeStatsWeekly, getIntakeStatsMonthly, getMealStatsDaily, getMealStatsWeekly, getMealStatsMonthly
 
 router = APIRouter(
-    prefix="/stats"
+    prefix="/avgstats"
 )
 
 @router.get("/daily/intake")

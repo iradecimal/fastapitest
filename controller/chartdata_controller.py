@@ -37,6 +37,25 @@ foodcountproject = { '$project': {
             'waste': '$waste',
 }}
 
+def getDatetimeInterval(interval: str):
+    #dateToday = datetime.today()
+    dateToday = date.fromisoformat("2023-11-23")
+    datetimeToday = datetime.fromisoformat(dateToday.isoformat())
+    datetimeBefore = ''
+    if interval == "daily":
+        datetimeBefore = datetimeToday - timedelta(days=1)
+    elif interval == "weekly":
+        datetimeBefore = datetimeToday - timedelta(weeks=1)
+    elif interval == "monthly":
+        datetimeBefore = datetimeToday - timedelta(weeks=4)
+    elif interval == "3month":
+        datetimeBefore = datetimeToday - timedelta(weeks=12)
+    else:
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
+    datetimeinterval = { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeBefore}}}, 
+    return datetimeinterval
+
+
 def getFoodGroupsDataDaily():
     #dateToday = datetime.today()
     dateToday = date.fromisoformat("2023-11-23")

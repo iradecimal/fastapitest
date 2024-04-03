@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from routes import avgstats, charts, trends, find, sex
-
-
+from routes import avgstats, mealcharts, intakecharts, trends, find, sex
 
 app = FastAPI()
 
@@ -17,11 +15,10 @@ app.add_middleware(
     allow_headers=["*"] 
 )
 
-app.include_router(avgstats.router, tags=["stats"])
-app.include_router(charts.router, tags=["charts"])
-app.include_router(find.router, tags=["find"])
-app.include_router(trends.router, tags=["trends"])
+
+app.include_router(avgstats.router, tags=["avgstats"])
+app.include_router(mealcharts.router, tags=["meals"])
+app.include_router(intakecharts.router, tags=["intakes"])
 app.include_router(sex.router, tags=["sex"])
-#trends
-#meals
-#intakes
+app.include_router(trends.router, tags=["trends"])
+app.include_router(find.router, tags=["find"])
