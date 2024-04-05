@@ -10,7 +10,7 @@ def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: 
     arima = pm.auto_arima(df[column], start_p=1, start_q=1,
         max_p=3, max_q=3, m=7,
         start_P=0, seasonal=True,
-        d=1, D=0, trace=1,
+        d=1, D=0, trace=0,
         error_action='ignore',  # don't want to know if an order does not work
         suppress_warnings=True,  # don't want convergence warnings
         stepwise=True
@@ -27,7 +27,6 @@ def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: 
     figpred = go.Figure(go.Scatter( x=df.date, y= df[column], name="Measured", marker_color=color,  line_shape='spline'))
     figpred.add_trace(go.Scatter(x=predicted.date, y=predicted[column], name="Predicted", line = dict(color='royalblue', width=4, dash='dash'),  line_shape='spline'))
     figpred.update_layout(title=title, xaxis_title = "Date", yaxis_title = yaxis)
-    figpred.show()
 
     return figpred
 

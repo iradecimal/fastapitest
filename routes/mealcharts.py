@@ -17,14 +17,14 @@ async def get_food_groups_weekly():
 async def get_food_groups_monthly():
     return getFoodGroupsMonthly()
 
-@router.get("/mealcount/daily")
+@router.get("/count/daily")
 async def get_meal_count_daily():
     return getMealCountDaily()
 
-@router.get("/mealcount/weekly")
+@router.get("/count/weekly")
 async def get_meal_count_weekly():
     return getMealCountWeekly()
 
-@router.get("/mealcount/monthly")
+@router.get("/count/monthly")
 async def get_meal_count_monthly():
     return getMealCountMonthly()

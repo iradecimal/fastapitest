@@ -18,7 +18,6 @@ def makeAvgIntakeBar(x: Series, y: Series, color: str, xaxis: str) -> go.Figure:
 def makeHistogram(df: DataFrame, x: str, color: str, xaxis: str) -> go.Figure:
     fig = go.Figure(px.histogram(df, x=x, color_discrete_sequence=color, marginal='box'))
     fig.update_layout(xaxis_title = xaxis, yaxis_title = "Count", bargap=0.05)
-    fig.show()
 
     return fig
 

@@ -8,13 +8,11 @@ genders={"M": "rgb(102, 153, 255)","F": "rgb(255, 102, 153)"}
 def makeSexLine(df: DataFrame, y:str, title:str, yaxis: str)  -> go.Figure:
     fig = px.line(df, x="date", y=y, color="sex", color_discrete_map=genders, title=title, markers = True)
     fig.update_layout(xaxis_title = "Date", yaxis_title= yaxis)
-    fig.show()
     return fig
 
 def makeSexHistogram(df: DataFrame, x: str, title:str, nbins:int, xaxis: str) -> go.Figure:
     fig = px.histogram(df, x=x, color="sex", title=title, marginal = 'box', nbins=nbins, color_discrete_map=genders)
     fig.update_layout(xaxis_title = xaxis, yaxis_title = "Count")
-    fig.show()
     return fig
 
 def makeIntakeSexHistograms(df: DataFrame) -> list:
