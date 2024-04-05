@@ -4,19 +4,19 @@ from .chartdata_controller import getFoodGroupsDataDaily, getFoodGroupsDataWeekl
 
 def getFoodGroupsDaily():
     df = getFoodGroupsDataDaily()
-    fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group", "Food Groups")
+    fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group")
 
     return(loads(fig.to_json()))
 
 def getFoodGroupsWeekly():
     df = getFoodGroupsDataWeekly()
-    fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group", "Food Groups")
+    fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group")
 
     return(loads(fig.to_json()))
 
 def getFoodGroupsMonthly():
     df = getFoodGroupsDataMonthly()
-    fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group", "Food Groups")
+    fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group")
     
     return(loads(fig.to_json()))
 

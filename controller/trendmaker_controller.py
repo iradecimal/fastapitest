@@ -26,7 +26,8 @@ def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: 
 
     figpred = go.Figure(go.Scatter( x=df.date, y= df[column], name="Measured", marker_color=color,  line_shape='spline'))
     figpred.add_trace(go.Scatter(x=predicted.date, y=predicted[column], name="Predicted", line = dict(color='royalblue', width=4, dash='dash'),  line_shape='spline'))
-    figpred.update_layout(title=title, xaxis_title = "Date", yaxis_title = yaxis)
+    figpred.update_layout(title=title, xaxis_title = "Date", yaxis_title = yaxis, width=600)
+    figpred.update_yaxes(automargin='left+top')
 
     return figpred
 
