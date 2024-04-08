@@ -9,15 +9,15 @@ def makeFoodGroupBar(df: DataFrame, x: str, y: str, orient: str, color: str) -> 
 
     return fig
 
-def makeAvgBar(x: Series, y: Series, color: str, xaxis: str, width: int) -> go.Figure: 
+def makeAvgBar(x: Series, y: Series, color: str, xaxis: str, width: int) -> go.Figure:  
     fig = go.Figure(go.Bar(x=x, y=y, marker_color=color))
-    fig.update_layout(xaxis_title=xaxis, yaxis_title="Count", width=width)
+    fig.update_layout(xaxis_title=xaxis, yaxis_title="Count", width=width, autosize = True)
 
     return fig
 
 def makeHistogram(df: DataFrame, x: str, color: str, xaxis: str, width: int) -> go.Figure:
     fig = go.Figure(px.histogram(df, x=x, color_discrete_sequence=color, marginal='box'))
-    fig.update_layout(xaxis_title = xaxis, yaxis_title = "Count", bargap=0.05, width=width)
+    fig.update_layout(xaxis_title = xaxis, yaxis_title = "Count", bargap=0.05, width=width, autosize = True)
 
     return fig
 
