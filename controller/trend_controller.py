@@ -1,4 +1,4 @@
-from .chartdata_controller import getAvgIntakeData1Month, getAvgIntakeData3Month
+from .intakedata_controller import getAvgIntakeData1Month, getAvgIntakeData3Month
 from .trendmaker_controller import makeIntakePredictions
 
 #one month intake trends

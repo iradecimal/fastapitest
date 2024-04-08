@@ -9,7 +9,7 @@ def makeFoodGroupBar(df: DataFrame, x: str, y: str, orient: str, color: str) -> 
 
     return fig
 
-def makeAvgIntakeBar(x: Series, y: Series, color: str, xaxis: str, width: int) -> go.Figure: 
+def makeAvgBar(x: Series, y: Series, color: str, xaxis: str, width: int) -> go.Figure: 
     fig = go.Figure(go.Bar(x=x, y=y, marker_color=color))
     fig.update_layout(xaxis_title=xaxis, yaxis_title="Count", width=width)
 
@@ -22,19 +22,39 @@ def makeHistogram(df: DataFrame, x: str, color: str, xaxis: str, width: int) -> 
     return fig
 
 def makeAvgIntakeGraphs(df: DataFrame) -> list:
-    figdailycal = makeAvgIntakeBar(df.date, df.dailycal, 'rgb(46, 184, 46)', "Daily Caloric Intake", 600)
+    figdailycal = makeAvgBar(df.date, df.dailycal, 'rgb(46, 184, 46)', "Daily Caloric Intake", 600)
 
-    figsleep = makeAvgIntakeBar(df.date, df.sleephrs, 'rgb(119, 51, 255)', "Average Hours of Sleep", 600)
+    figsleep = makeAvgBar(df.date, df.sleephrs, 'rgb(119, 51, 255)', "Average Hours of Sleep", 600)
 
-    figwater = makeAvgIntakeBar(df.date, df.waterglass, 'rgb(0, 172, 230)', "Average Water Intake in Glasses", 600)
+    figwater = makeAvgBar(df.date, df.waterglass, 'rgb(0, 172, 230)', "Average Water Intake in Glasses", 600)
 
-    figsteps = makeAvgIntakeBar(df.date, df.steps, 'rgb(51, 204, 51)', "Average Steps Taken Daily", 600)
+    figsteps = makeAvgBar(df.date, df.steps, 'rgb(51, 204, 51)', "Average Steps Taken Daily", 600)
 
     data = [{
          "dailycalplot": loads(figdailycal.to_json()),
          "sleepplot": loads(figsleep.to_json()),
          "waterplot": loads(figwater.to_json()),
          "stepsplot": loads(figsteps.to_json()),
+    }]
+    return(data)
+
+def makeAvgMealGraphs(df: DataFrame) -> list:
+    figfat = makeAvgBar(df.date, df.fat,['rgb(255, 153, 0)'], "Fat Intake", 600)
+
+    figcarbs = makeAvgBar(df.date, df.carbs, ['rgb(115, 230, 0)'], "Carb Intake", 600)
+    
+    figproteins = makeAvgBar(df.date, df.proteins, ['rgb(179, 36, 0)'], "Protein Intake", 600)
+
+    figcal = makeAvgBar(df.date, df.cal, ['rgb(77, 136, 255)'], "Calories per Meal", 600)
+    
+    figwaste = makeAvgBar(df.date, df.waste, ['rgb(102, 0, 51)'], "Daily Food Waste", 600)
+
+    data = [{
+        "fatplot": loads(figfat.to_json()),
+        "carbsplot": loads(figcarbs.to_json()),
+        "proteinsplot": loads(figproteins.to_json()),
+        "calplot": loads(figcal.to_json()),
+        "wasteplot": loads(figwaste.to_json())
     }]
     return(data)
 

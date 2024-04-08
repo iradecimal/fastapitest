@@ -1,6 +1,6 @@
 from bson.json_util import loads
-from .chartmaker_controller import makeFoodGroupBar, makeFoodHistograms 
-from .chartdata_controller import getFoodGroupsDataDaily, getFoodGroupsDataWeekly, getFoodGroupsDataMonthly, getMealStatsDaily, getMealStatsMonthly, getMealStatsWeekly
+from .chartmaker_controller import makeFoodGroupBar, makeFoodHistograms, makeAvgMealGraphs
+from .mealdata_controller import getFoodGroupsDataDaily, getFoodGroupsDataWeekly, getFoodGroupsDataMonthly, getMealStatsDaily, getMealStatsMonthly, getMealStatsWeekly, getMealAvgWeekly, getMealAvgMonthly
 
 def getFoodGroupsDaily():
     df = getFoodGroupsDataDaily()
@@ -34,7 +34,18 @@ def getMealCountWeekly():
 
 def getMealCountMonthly():
     df = getMealStatsMonthly()
-    print(df)
     charts = makeFoodHistograms(df)
+
+    return charts
+
+def getMealAvgWeekly():
+    df = getMealAvgWeekly()
+    charts = makeAvgMealGraphs(df)
+
+    return charts
+
+def getMealAvgWeekly():
+    df = getMealAvgMonthly()
+    charts = makeAvgMealGraphs(df)
 
     return charts

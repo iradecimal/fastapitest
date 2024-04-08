@@ -1,5 +1,5 @@
 from .chartmaker_controller import makeAvgIntakeGraphs, makeIntakeHistograms 
-from .chartdata_controller import getAvgIntakeDataWeek, getAvgIntakeData1Month, getAvgIntakeData3Month,  getIntakeCountDaily, getIntakeCountWeekly, getIntakeCountMonthly
+from .intakedata_controller import getAvgIntakeDataWeek, getAvgIntakeData1Month, getAvgIntakeData3Month,  getIntakeCountDaily, getIntakeCountWeekly, getIntakeCountMonthly
 
 def getAvgIntakeWeek():
     df = getAvgIntakeDataWeek()
