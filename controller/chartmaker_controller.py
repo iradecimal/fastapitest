@@ -5,7 +5,7 @@ from bson.json_util import loads
 
 def makeFoodGroupBar(df: DataFrame, x: str, y: str, orient: str, color: str) -> go.Figure:
     fig = px.bar(df, x=x, y=y, orientation=orient, color=color)
-    fig.update_layout(xaxis_title = "Food Groups", yaxis={'visible': False, 'showticklabels': False}, xaxis={'categoryorder':'total descending'}, width=600)
+    fig.update_layout(xaxis_title = "Food Groups", yaxis={'visible': False, 'showticklabels': False}, xaxis={'categoryorder':'total descending'}, width=600, autosize = True)
 
     return fig
 

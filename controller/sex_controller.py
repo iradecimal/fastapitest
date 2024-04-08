@@ -12,7 +12,7 @@ def getSexIntakeCountMonthly():
     df = getIntakeCountSexMonthly()
     charts = makeIntakeSexHistograms(df)
     
-    return(charts) 
+    return(charts)  
 
 def getSexAvgIntakeWeekly():
     df = getIntakeAvgSexWeekly()
