@@ -86,7 +86,6 @@ def sortQuery(query: str):
             querylist.append(cleanSortQuery(sortquery))
         return(querylist)
     else:
-        print("single value")
         return([cleanSortQuery(query)])
 
 @router.get("/meals/")
