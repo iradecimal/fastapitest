@@ -39,15 +39,15 @@ def makeAvgIntakeGraphs(df: DataFrame) -> list:
     return(data)
 
 def makeAvgMealGraphs(df: DataFrame) -> list:
-    figfat = makeAvgBar(df.date, df.fat,['rgb(255, 153, 0)'], "Fat Intake", 450)
+    figfat = makeAvgBar(df.date, df.fat,'rgb(255, 153, 0)', "Fat Intake", 450)
 
-    figcarbs = makeAvgBar(df.date, df.carbs, ['rgb(115, 230, 0)'], "Carb Intake", 450)
+    figcarbs = makeAvgBar(df.date, df.carbs, 'rgb(115, 230, 0)', "Carb Intake", 450)
     
-    figproteins = makeAvgBar(df.date, df.proteins, ['rgb(179, 36, 0)'], "Protein Intake", 450)
+    figproteins = makeAvgBar(df.date, df.proteins, 'rgb(179, 36, 0)', "Protein Intake", 450)
 
-    figcal = makeAvgBar(df.date, df.cal, ['rgb(77, 136, 255)'], "Calories per Meal", 450)
+    figcal = makeAvgBar(df.date, df.cal, 'rgb(77, 136, 255)', "Calories per Meal", 450)
     
-    figwaste = makeAvgBar(df.date, df.waste, ['rgb(102, 0, 51)'], "Daily Food Waste", 450)
+    figwaste = makeAvgBar(df.date, df.waste, 'rgb(102, 0, 51)', "Daily Food Waste", 450)
 
     data = [{
         "fatplot": loads(figfat.to_json()),

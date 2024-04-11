@@ -103,7 +103,7 @@ def getMealStatsMonthly():
 
     return(meals.aggregate_pandas_all(pipeline, schema = FoodCountSchema))
 
-def getMealAvgWeekly():
+def getMealAvgDataWeekly():
     pipeline = [
         getDatetimeInterval("weekly"),   
         avgmealgroup
@@ -113,7 +113,7 @@ def getMealAvgWeekly():
 
     return(df)
 
-def getMealAvgMonthly():
+def getMealAvgDataMonthly():
     pipeline = [
         getDatetimeInterval("monthly"),   
         avgmealgroup
