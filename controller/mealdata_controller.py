@@ -22,6 +22,13 @@ avgmealgroup = {'$group' : {
             'waste': {'$avg': '$waste'},
         }}
 
+lookupUser = { '$lookup': {
+        'from': "users",
+        'localField': "uid",
+        'foreignField': "_id",
+        'as': "user_data",
+}}
+
 foodcountproject = { '$project': {
             'fat': '$fat',
             'carbs': '$carbs',
@@ -48,10 +55,14 @@ def getDatetimeInterval(interval: str):
     datetimeinterval = { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeBefore}}} 
     return datetimeinterval
 
-
-def getFoodGroupsDataDaily():
+def getFoodGroupsDataSex(sex: str, interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-        getDatetimeInterval("daily"),  
+        getDatetimeInterval(interval),
+        lookupUser, 
+        { '$unwind': '$user_data'},
+        { '$match': { 'user_data.sex' : sex}},
         {'$unwind': '$foodgroups'}, foodgroup
     ]
     df = (meals.aggregate_pandas_all(pipeline, schema = FoodGroupsSchema))
@@ -59,45 +70,37 @@ def getFoodGroupsDataDaily():
 
     return df
 
-def getFoodGroupsDataWeekly():
+def getFoodGroupsData(interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-        getDatetimeInterval("weekly"),    
+        getDatetimeInterval(interval),  
         {'$unwind': '$foodgroups'}, foodgroup
     ]
-    df = (meals.aggregate_pandas_all(pipeline,  schema = FoodGroupsSchema))
+    df = (meals.aggregate_pandas_all(pipeline, schema = FoodGroupsSchema))
     df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
 
     return df
 
-def getFoodGroupsDataMonthly():
-    pipeline = [
-        getDatetimeInterval("monthly"),
-        {'$unwind': '$foodgroups'}, foodgroup
-    ]
-    df = (meals.aggregate_pandas_all(pipeline,  schema = FoodGroupsSchema))
-    df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
 
-    return(df)
-
-def getMealStatsDaily():
+def getMealStats(interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-        getDatetimeInterval("daily"),  
+        getDatetimeInterval(interval),   
         foodcountproject
     ]
 
     return(meals.aggregate_pandas_all(pipeline, schema = FoodCountSchema))
 
-def getMealStatsWeekly():
+def getMealStatsSex(sex: str, interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-        getDatetimeInterval("weekly"),    
-        foodcountproject
-    ]
-
-    return(meals.aggregate_pandas_all(pipeline, schema = FoodCountSchema))
-
-def getMealStatsMonthly():
-    pipeline = [
-        getDatetimeInterval("monthly"),   
+        getDatetimeInterval(interval),
+        lookupUser, 
+        { '$unwind': '$user_data'},
+        { '$match': { 'user_data.sex' : sex}},
         foodcountproject
     ]
 

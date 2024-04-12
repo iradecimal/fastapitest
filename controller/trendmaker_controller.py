@@ -40,7 +40,9 @@ def makeIntakePredictions(df: DataFrame, interval: int) -> list:
     figwater = PredictTrends(df, "waterglass", interval, 'rgb(0, 172, 230)', "Water Intake in Glasses", "glasses")
     print("steps")
     figsteps = PredictTrends(df, "steps", interval, 'rgb(51, 204, 51)', "Steps Taken Daily", "steps")
+    dateToday = date.fromisoformat("2023-11-23")
     data = [{
+         "date": dateToday.isoformat(),
          "dailycalplot": loads(figdailycal.to_json()),
          "sleepplot": loads(figsleep.to_json()),
          "waterplot": loads(figwater.to_json()),

@@ -5,6 +5,22 @@ from pymongoarrow.api import Schema
 
 AvgIntakeSchema = Schema({'_id': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
 IntakeCountSchema =Schema({'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
+SexIntakeCountSchema =Schema({'sex': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
+
+lookupUser = { '$lookup': {
+        'from': "users",
+        'localField': "uid",
+        'foreignField': "_id",
+        'as': "user_data",
+}}
+
+projectSexData = {'$project': {
+    "sex": '$user_data.sex',
+    "waterglass": "$waterglass",
+    "sleephrs": "$sleephrs",
+    "dailycal": "$dailycal",
+    "steps": "$steps",
+}}
 
 avgintakegroup = {'$group': {
     '_id': '$date',
@@ -38,17 +54,17 @@ def getDateInterval(interval: str):
     dateInterval = { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateBefore.isoformat()}}}
     return dateInterval
 
-def getAvgIntakeDataWeek():
-    pipeline = [
-        getDateInterval("weekly"),
-        avgintakegroup
-    ]
-    df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
-    df = df.rename(columns={'_id':'date'})
-    df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
-    df = df.sort_values(by='date')
+# def getAvgIntakeDataWeek():
+#     pipeline = [
+#         getDateInterval("weekly"),
+#         avgintakegroup
+#     ]
+#     df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
+#     df = df.rename(columns={'_id':'date'})
+#     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
+#     df = df.sort_values(by='date')
 
-    return(df)
+#     return(df)
 
 def getAvgIntakeData1Month():
     pipeline = [
@@ -74,26 +90,29 @@ def getAvgIntakeData3Month():
 
     return(df)
 
-def getIntakeCountDaily():
+def getIntakeCount(interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-        getDateInterval("daily"),
+        getDateInterval(interval),
         intakecountproject
     ]
 
     return(intakes.aggregate_pandas_all(pipeline, schema = IntakeCountSchema))
 
-def getIntakeCountWeekly():
+def getIntakeCountSex(sex: str, interval: str):
+    if (sex != 'M' and sex != 'F'):
+        raise ValueError("Wrong sex was sent. Please check for capitalization/spelling errors.")
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-        getDateInterval("weekly"),  
-        intakecountproject
+        getDateInterval(interval),
+        lookupUser, 
+        { '$unwind': '$user_data'},
+        { '$match': { 'user_data.sex' : sex}},
+        projectSexData
     ]
 
-    return(intakes.aggregate_pandas_all(pipeline, schema = IntakeCountSchema))
-
-def getIntakeCountMonthly():
-    pipeline = [
-        getDateInterval("monthly"),   
-        intakecountproject
-    ]
-
-    return(intakes.aggregate_pandas_all(pipeline, schema = IntakeCountSchema))
+    df = (intakes.aggregate_pandas_all(pipeline, schema = SexIntakeCountSchema))
+    
+    return df
