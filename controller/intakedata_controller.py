@@ -54,21 +54,11 @@ def getDateInterval(interval: str):
     dateInterval = { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateBefore.isoformat()}}}
     return dateInterval
 
-# def getAvgIntakeDataWeek():
-#     pipeline = [
-#         getDateInterval("weekly"),
-#         avgintakegroup
-#     ]
-#     df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
-#     df = df.rename(columns={'_id':'date'})
-#     df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
-#     df = df.sort_values(by='date')
-
-#     return(df)
-
-def getAvgIntakeData1Month():
+def getAvgIntakeData(interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-        getDateInterval("monthly"),
+        getDateInterval(interval),
         avgintakegroup
     ]
     df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
