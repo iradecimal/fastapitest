@@ -6,6 +6,8 @@ from datetime import date, timedelta
 import pandas as pd
 import pmdarima as pm
 
+from db import trends
+
 def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: str, yaxis: str) -> go.Figure:
     arima = pm.auto_arima(df[column], start_p=1, start_q=1,
         max_p=3, max_q=3, m=7,
@@ -32,15 +34,13 @@ def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: 
     return figpred
 
 def makeIntakePredictions(df: DataFrame, interval: int) -> list:
-    print("cal")
-    figdailycal = PredictTrends(df, "dailycal", interval, 'rgb(46, 184, 46)', "Caloric Intake", "calories")
-    print("sleep")
-    figsleep = PredictTrends(df, "sleephrs", interval, 'rgb(119, 51, 255)', "Hours of Sleep", "hours")
-    print("water")
-    figwater = PredictTrends(df, "waterglass", interval, 'rgb(0, 172, 230)', "Water Intake in Glasses", "glasses")
-    print("steps")
-    figsteps = PredictTrends(df, "steps", interval, 'rgb(51, 204, 51)', "Steps Taken Daily", "steps")
     dateToday = date.fromisoformat("2023-11-23")
+
+    figdailycal = PredictTrends(df, "dailycal", interval, 'rgb(46, 184, 46)', "Caloric Intake", "calories")
+    figsleep = PredictTrends(df, "sleephrs", interval, 'rgb(119, 51, 255)', "Hours of Sleep", "hours")
+    figwater = PredictTrends(df, "waterglass", interval, 'rgb(0, 172, 230)', "Water Intake in Glasses", "glasses")
+    figsteps = PredictTrends(df, "steps", interval, 'rgb(51, 204, 51)', "Steps Taken Daily", "steps")
+
     data = [{
          "date": dateToday.isoformat(),
          "dailycalplot": loads(figdailycal.to_json()),

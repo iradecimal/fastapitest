@@ -38,7 +38,7 @@ foodcountproject = { '$project': {
 }}
 
 def getDatetimeInterval(interval: str):
-    #dateToday = datetime.today()
+    #dateToday = date.today()
     dateToday = date.fromisoformat("2023-11-23")
     datetimeToday = datetime.fromisoformat(dateToday.isoformat())
     datetimeBefore = ''
@@ -56,6 +56,8 @@ def getDatetimeInterval(interval: str):
     return datetimeinterval
 
 def getFoodGroupsDataSex(sex: str, interval: str):
+    if (sex != 'M' and sex != 'F'):
+        raise ValueError("Wrong sex was sent. Please check for capitalization/spelling errors.")
     if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
         raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
@@ -84,6 +86,33 @@ def getFoodGroupsData(interval: str):
 
     return df
 
+def getMealAvgStats(interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
+    pipeline = [
+        getDatetimeInterval(interval),  
+        avgmealgroup
+    ]
+    df = meals.aggregate_pandas_all(pipeline, schema = FoodAvgSchema)
+    df = df.rename(columns={'_id': 'date'})
+
+    return(df)
+
+def getMealAvgStatsSex(sex: str, interval: str):
+    if (sex != 'M' and sex != 'F'):
+        raise ValueError("Wrong sex was sent. Please check for capitalization/spelling errors.")
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
+    pipeline = [
+        getDatetimeInterval(interval),
+        { '$unwind': '$user_data'},
+        { '$match': { 'user_data.sex' : sex}},  
+        avgmealgroup
+    ]
+    df = meals.aggregate_pandas_all(pipeline, schema = FoodAvgSchema)
+    df = df.rename(columns={'_id': 'date'})
+
+    return(df)
 
 def getMealStats(interval: str):
     if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
@@ -108,22 +137,3 @@ def getMealStatsSex(sex: str, interval: str):
 
     return(meals.aggregate_pandas_all(pipeline, schema = FoodCountSchema))
 
-def getMealAvgDataWeekly():
-    pipeline = [
-        getDatetimeInterval("weekly"),   
-        avgmealgroup
-    ]
-    df = meals.aggregate_pandas_all(pipeline, schema = FoodAvgSchema)
-    df = df.rename(columns={'_id': 'date'})
-
-    return(df)
-
-def getMealAvgDataMonthly():
-    pipeline = [
-        getDatetimeInterval("monthly"),   
-        avgmealgroup
-    ]
-    df = meals.aggregate_pandas_all(pipeline, schema = FoodAvgSchema)
-    df = df.rename(columns={'_id': 'date'})
-
-    return(df)

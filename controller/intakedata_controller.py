@@ -3,6 +3,8 @@ from datetime import date, datetime, timedelta
 import pandas as pd
 from pymongoarrow.api import Schema
 
+#===========================================================================================================#
+
 AvgIntakeSchema = Schema({'_id': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
 IntakeCountSchema =Schema({'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
 SexIntakeCountSchema =Schema({'sex': str, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
@@ -37,8 +39,10 @@ intakecountproject = {'$project': {
     "steps": "$steps",
 }}
 
+#===========================================================================================================#
+
 def getDateInterval(interval: str):
-    #dateToday = datetime.today()
+    #dateToday = date.today()
     dateToday = date.fromisoformat("2023-11-23") #testing purposes
     dateBefore = ''
     if interval == "daily":
@@ -54,6 +58,8 @@ def getDateInterval(interval: str):
     dateInterval = { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateBefore.isoformat()}}}
     return dateInterval
 
+#===========================================================================================================#
+
 def getAvgIntakeData(interval: str):
     if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
         raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
@@ -68,6 +74,26 @@ def getAvgIntakeData(interval: str):
 
     return(df)
 
+def getAvgIntakeDataSex(sex: str, interval: str):
+    if (sex != 'M' and sex != 'F'):
+        raise ValueError("Wrong sex was sent. Please check for capitalization/spelling errors.")
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
+    pipeline = [
+        getDateInterval(interval),
+        lookupUser, 
+        { '$unwind': '$user_data'},
+        { '$match': { 'user_data.sex' : sex}},
+        avgintakegroup
+    ]
+    df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
+    df = df.rename(columns={'_id':'date'})
+    df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
+    df = df.sort_values(by='date')
+
+    return(df)
+
+#===========================================================================================================#
 
 def getIntakeCount(interval: str):
     if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
@@ -95,3 +121,5 @@ def getIntakeCountSex(sex: str, interval: str):
     df = (intakes.aggregate_pandas_all(pipeline, schema = SexIntakeCountSchema))
     
     return df
+
+#===========================================================================================================#
