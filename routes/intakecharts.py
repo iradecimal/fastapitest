@@ -51,3 +51,4 @@ async def get_intake_count_monthly(sex: Annotated[str | None, Query(max_length=1
         return getIntakePlotMonthly()
     
 #===========================================================================================================#
+

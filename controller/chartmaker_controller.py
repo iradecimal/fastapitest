@@ -92,7 +92,7 @@ def makeFoodHistograms(df: DataFrame) -> list:
     
     figwaste = makeHistogram(df, "waste", ['rgb(102, 0, 51)'], "Waste", 450)
 
-    data = {
+    data = { 
         "fatplot": loads(figfat.to_json()),
         "carbsplot": loads(figcarbs.to_json()),
         "proteinsplot": loads(figproteins.to_json()),

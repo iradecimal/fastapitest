@@ -9,20 +9,6 @@ from bson.json_util import loads
 labels = ["0-59%", "60-79%", "80-99%", "100%+"]
 steplabels = [ "Sedentary", "Low Active", "Somewhat Active", "Active", "Highly Active"]
 wastelabels = [ "0-24g of Waste", "24-32g of Waste", "32-40g of Waste", "40g+ of Waste"]
-foodgroupcolors = {
-"Animal-Sourced Protein" : "rgb(179, 36, 0)",
-"Carbohydrate" : "rgb(255, 204, 102)",
-"Combo Appetizer" : "rgb(218, 145, 1)", 
-"Combo Dessert" : "rgb(255, 204, 255)",
-"Combo Main Dish" : "rgb(204, 102, 0)",
-"Dairy" : "rgb(255, 204, 153)",
-"Fat" : "rgb(255, 153, 0)",
-"Fruit" : "rgb(255, 77, 77)",
-"Plant-Sourced Protein" : "rgb(153, 255, 102)",
-"Rice" : "rgb(238, 238, 238)",
-"Sugar" : "rgb(255, 217, 179)",
-"Vegetable" : "rgb(115, 161, 69)",
-}
 
 #===========================================================================================================#
 
@@ -34,11 +20,11 @@ def getIntervals(labels, bins) -> dict:
 
 #===========================================================================================================#
 
-def makeFoodGroupCharts(df: DataFrame, x: str, y: str, orient: str, palette) -> go.Figure:
+def makeFoodGroupCharts(df: DataFrame, x: str, y: str, orient: str, palette: dict) -> go.Figure:
     figbar = px.bar(df, x=x, y=y, orientation=orient, color=y, color_discrete_map = palette)
     figbar.update_layout(xaxis_title = "Food Groups", yaxis={'visible': False, 'showticklabels': False}, xaxis={'categoryorder':'total descending'},  autosize = True)
 
-    figpie = go.Figure(px.pie(df, values='Count',names='Food Group', color='Food Group', color_discrete_map = foodgroupcolors))
+    figpie = go.Figure(px.pie(df, values='Count',names='Food Group', color='Food Group', color_discrete_map = palette))
     figpie.update_traces(hoverinfo='label+percent', textinfo='none',  sort = False)
 
     data = {
@@ -56,9 +42,9 @@ def makeAdequacyPieChart(df: DataFrame, x:str, perbins: list, labels: list, titl
     fig = go.Figure(px.pie(countdf, values = 'Count', names = 'Adequacy', color = 'Adequacy', hole = 0.4, title = title, 
                            custom_data = ['Interval'], color_discrete_map = dict(map(lambda i,j : (i,j), labels, colors))))
     fig.update_layout(autosize=True)
-    fig.update_traces(sort=False,
-                     hovertemplate = "<br>Interval: %{customdata}<br>Count: %{value}")
-    fig.show()
+    fig.update_traces(sort=False, hovertemplate = "<br>Interval: %{customdata}<br>Count: %{value}")
+    
+    return fig 
 
 #===========================================================================================================#
 
