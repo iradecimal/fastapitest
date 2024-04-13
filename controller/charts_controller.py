@@ -4,6 +4,8 @@ import pandas as pd
 from pandas import DataFrame, Series
 from bson.json_util import loads
 
+#===========================================================================================================#
+
 labels = ["0-59%", "60-79%", "80-99%", "100%+"]
 steplabels = [ "Sedentary", "Low Active", "Somewhat Active", "Active", "Highly Active"]
 wastelabels = [ "0-24g of Waste", "24-32g of Waste", "32-40g of Waste", "40g+ of Waste"]
@@ -22,6 +24,7 @@ foodgroupcolors = {
 "Vegetable" : "rgb(115, 161, 69)",
 }
 
+#===========================================================================================================#
 
 def getIntervals(labels, bins) -> dict:
     labelsDict = dict()
@@ -29,19 +32,20 @@ def getIntervals(labels, bins) -> dict:
         labelsDict.update({labels[i] : f"({round(bins[i],2)},{round(bins[i+1],2)}]"})
     return labelsDict
 
-def makeFoodGroupBar(df: DataFrame, x: str, y: str, orient: str, palette) -> go.Figure:
+#===========================================================================================================#
+
+def makeFoodGroupCharts(df: DataFrame, x: str, y: str, orient: str, palette) -> go.Figure:
     figbar = px.bar(df, x=x, y=y, orientation=orient, color=y, color_discrete_map = palette)
     figbar.update_layout(xaxis_title = "Food Groups", yaxis={'visible': False, 'showticklabels': False}, xaxis={'categoryorder':'total descending'},  autosize = True)
 
     figpie = go.Figure(px.pie(df, values='Count',names='Food Group', color='Food Group', color_discrete_map = foodgroupcolors))
     figpie.update_traces(hoverinfo='label+percent', textinfo='none',  sort = False)
 
-    data = [{
+    data = {
         "barplot" : loads(figbar.to_json()),
          "pieplot": loads(figpie.to_json()),
-    }]
+    }
     return(data)
-
 
 def makeAdequacyPieChart(df: DataFrame, x:str, perbins: list, labels: list, title: str, colors: list):
     bins = pd.cut(df[x], bins=perbins, labels=labels, right=False)
@@ -56,6 +60,7 @@ def makeAdequacyPieChart(df: DataFrame, x:str, perbins: list, labels: list, titl
                      hovertemplate = "<br>Interval: %{customdata}<br>Count: %{value}")
     fig.show()
 
+#===========================================================================================================#
 
 def makeIntakeAdequacyCharts(df: DataFrame) -> list:
     figdailycal = makeAdequacyPieChart(df, "dailycal", [0, (2230*0.6), (2230*0.8), 2230, float('inf')], labels, "Daily Calories (in kcal)",
@@ -74,12 +79,12 @@ def makeIntakeAdequacyCharts(df: DataFrame) -> list:
                                         ["#F2533F","#F2913F","#F2CE3F","#D9F23F","#9CF23F"]
                                    )
 
-    data = [{
+    data = {
         "dailycalplot": loads(figdailycal.to_json()),
         "sleepplot": loads(figsleep.to_json()),
         "waterplot": loads(figwater.to_json()),
         "stepsplot": loads(figsteps.to_json()),
-    }]
+    }
     return(data)
 
 def makeMealAdequacyChart(df: DataFrame) -> list:
@@ -103,11 +108,13 @@ def makeMealAdequacyChart(df: DataFrame) -> list:
                                         ["#FFA86D","#FF7316","#BD4C00","#662900"]
                                       )
 
-    data = [{
+    data = {
        "calplot": loads(figcal.to_json()),
        "fatplot": loads(figfat.to_json()),
        "carbsplot": loads(figcarbs.to_json()),
        "proteinsplot": loads(figproteins.to_json()),
        "wasteplot": loads(figwaste.to_json())
-    }]
+    }
     return(data)
+
+#===========================================================================================================#

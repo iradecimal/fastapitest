@@ -7,9 +7,12 @@ from bson.json_util import dumps
 from pymongo import ASCENDING, DESCENDING
 import json
 import re
+
 router = APIRouter(
     prefix="/find"
 )
+
+#===========================================================================================================#
 
 querypattern = re.compile("\$(gt|gte|lt|lte|in|match)")
 oidpattern = re.compile("[0-9a-fA-F]{24}")
@@ -27,6 +30,8 @@ def is_date(querystr: str) -> bool:
         return True
     except ValueError:
         return False
+    
+#===========================================================================================================#
 
 def cleanFindQuery(query: str):
     operator = re.match(querypattern, query)
@@ -87,6 +92,8 @@ def sortQuery(query: str):
         return(querylist)
     else:
         return([cleanSortQuery(query)])
+    
+#===========================================================================================================#
 
 @router.get("/meals/")
 async def search_meal(
@@ -127,6 +134,8 @@ async def search_meal(
         response = meals.find(filter = find_dict, skip = skip, limit = limit)
         return(json.loads(dumps(response)))
 
+#===========================================================================================================#
+
 @router.get("/intakes/")
 async def search_intake(
     sort: str | None = None,
@@ -165,3 +174,5 @@ async def search_intake(
     else:
         response = intakes.find(filter = find_dict, skip = skip, limit = limit)
         return(json.loads(dumps(response)))
+
+#===========================================================================================================#

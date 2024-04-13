@@ -18,6 +18,8 @@ router = APIRouter(
 # async def get_3month_avg_intake():
 #     return getAvgIntake3Month()
 
+#===========================================================================================================#
+
 @router.get("/count/daily/")
 async def get_intake_count_daily(sex: Annotated[str | None, Query(max_length=1)] = None):
     if sex:
@@ -47,3 +49,5 @@ async def get_intake_count_monthly(sex: Annotated[str | None, Query(max_length=1
             return getIntakePlotMonthlySex('M')
     else:
         return getIntakePlotMonthly()
+    
+#===========================================================================================================#

@@ -2,6 +2,8 @@ from bson.json_util import loads
 from .chartmaker_controller import makeFoodGroupBar, makeFoodHistograms, makeAvgMealGraphs
 from .mealdata_controller import getFoodGroupsData , getMealStats, getMealStatsSex, getFoodGroupsDataSex
 
+#===========================================================================================================#
+
 def getFoodGroupsDaily():
     df = getFoodGroupsData('daily')
     fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group")
@@ -19,6 +21,8 @@ def getFoodGroupsMonthly():
     fig = makeFoodGroupBar(df, "Count", "Food Group", "h", "Food Group")
     
     return(loads(fig.to_json()))
+
+#===========================================================================================================#
 
 def getFoodGroupsDailySex(sex: str):
     df = getFoodGroupsDataSex(sex, 'daily')
@@ -38,6 +42,7 @@ def getFoodGroupsMonthlySex(sex: str):
     
     return(loads(fig.to_json()))
 
+#===========================================================================================================#
 
 def getMealCountDaily():
     df = getMealStats('daily')
@@ -57,6 +62,8 @@ def getMealCountMonthly():
 
     return charts
 
+#===========================================================================================================#
+
 def getMealCountDailySex(sex: str):
     df = getMealStatsSex(sex, 'daily')
     charts = makeFoodHistograms(df)
@@ -74,3 +81,5 @@ def getMealCountMonthlySex(sex: str):
     charts = makeFoodHistograms(df)
 
     return charts
+
+#===========================================================================================================#

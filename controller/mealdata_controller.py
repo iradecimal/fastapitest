@@ -3,6 +3,8 @@ from datetime import date, datetime, timedelta
 import pandas as pd
 from pymongoarrow.api import Schema
 
+#===========================================================================================================#
+
 # Schemas shared between several functions
 FoodGroupsSchema = Schema({'_id': str, 'count': int})
 FoodCountSchema = Schema({'fat': float, 'carbs': float, 'proteins': float, 'cal': float, 'waste': float})
@@ -37,6 +39,8 @@ foodcountproject = { '$project': {
             'waste': '$waste',
 }}
 
+#===========================================================================================================#
+
 def getDatetimeInterval(interval: str):
     #dateToday = date.today()
     dateToday = date.fromisoformat("2023-11-23")
@@ -54,6 +58,21 @@ def getDatetimeInterval(interval: str):
         raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     datetimeinterval = { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeBefore}}} 
     return datetimeinterval
+
+#===========================================================================================================#
+
+def getFoodGroupsData(interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
+    pipeline = [
+        getDatetimeInterval(interval),  
+        {'$unwind': '$foodgroups'}, foodgroup
+    ]
+    df = (meals.aggregate_pandas_all(pipeline, schema = FoodGroupsSchema))
+    df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
+    df.sort_values(by=['Food Group'], inplace=True, ascending=True)
+
+    return df
 
 def getFoodGroupsDataSex(sex: str, interval: str):
     if (sex != 'M' and sex != 'F'):
@@ -73,18 +92,7 @@ def getFoodGroupsDataSex(sex: str, interval: str):
 
     return df
 
-def getFoodGroupsData(interval: str):
-    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
-        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
-    pipeline = [
-        getDatetimeInterval(interval),  
-        {'$unwind': '$foodgroups'}, foodgroup
-    ]
-    df = (meals.aggregate_pandas_all(pipeline, schema = FoodGroupsSchema))
-    df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
-    df.sort_values(by=['Food Group'], inplace=True, ascending=True)
-
-    return df
+#===========================================================================================================#
 
 def getMealAvgStats(interval: str):
     if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
@@ -114,6 +122,8 @@ def getMealAvgStatsSex(sex: str, interval: str):
 
     return(df)
 
+#===========================================================================================================#
+
 def getMealStats(interval: str):
     if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
         raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
@@ -137,3 +147,4 @@ def getMealStatsSex(sex: str, interval: str):
 
     return(meals.aggregate_pandas_all(pipeline, schema = FoodCountSchema))
 
+#===========================================================================================================#

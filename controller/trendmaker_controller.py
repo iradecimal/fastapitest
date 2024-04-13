@@ -8,6 +8,8 @@ import pmdarima as pm
 
 from db import trends
 
+#===========================================================================================================#
+
 def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: str, yaxis: str) -> go.Figure:
     arima = pm.auto_arima(df[column], start_p=1, start_q=1,
         max_p=3, max_q=3, m=7,
@@ -33,19 +35,29 @@ def PredictTrends(df: DataFrame, column: str, interval: int, color: str, title: 
 
     return figpred
 
+#===========================================================================================================#
+
 def makeIntakePredictions(df: DataFrame, interval: int) -> list:
+    #dateToday = date.today()
     dateToday = date.fromisoformat("2023-11-23")
+    data = []
+    if trends.count_documents({'date': dateToday.isoformat()}, limit = 1) == 0:
+        figdailycal = PredictTrends(df, "dailycal", interval, 'rgb(46, 184, 46)', "Caloric Intake", "calories")
+        figsleep = PredictTrends(df, "sleephrs", interval, 'rgb(119, 51, 255)', "Hours of Sleep", "hours")
+        figwater = PredictTrends(df, "waterglass", interval, 'rgb(0, 172, 230)', "Water Intake in Glasses", "glasses")
+        figsteps = PredictTrends(df, "steps", interval, 'rgb(51, 204, 51)', "Steps Taken Daily", "steps")
 
-    figdailycal = PredictTrends(df, "dailycal", interval, 'rgb(46, 184, 46)', "Caloric Intake", "calories")
-    figsleep = PredictTrends(df, "sleephrs", interval, 'rgb(119, 51, 255)', "Hours of Sleep", "hours")
-    figwater = PredictTrends(df, "waterglass", interval, 'rgb(0, 172, 230)', "Water Intake in Glasses", "glasses")
-    figsteps = PredictTrends(df, "steps", interval, 'rgb(51, 204, 51)', "Steps Taken Daily", "steps")
+        data = {
+            "date": dateToday.isoformat(),
+            "dailycalplot": loads(figdailycal.to_json()),
+            "sleepplot": loads(figsleep.to_json()),
+            "waterplot": loads(figwater.to_json()),
+            "stepsplot": loads(figsteps.to_json()) ,
+        }
 
-    data = [{
-         "date": dateToday.isoformat(),
-         "dailycalplot": loads(figdailycal.to_json()),
-         "sleepplot": loads(figsleep.to_json()),
-         "waterplot": loads(figwater.to_json()),
-         "stepsplot": loads(figsteps.to_json()) ,
-    }]
+        post = trends.insert_one(data)
+    else: 
+        data = trends.find_one({'date': dateToday.isoformat()}, {"_id": 0})
     return(data)
+
+#===========================================================================================================#

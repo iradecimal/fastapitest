@@ -3,6 +3,8 @@ import plotly.graph_objects as go
 from pandas import DataFrame, Series
 from bson.json_util import loads
 
+#===========================================================================================================#
+
 def makeFoodGroupBar(df: DataFrame, x: str, y: str, orient: str, color: str) -> go.Figure:
     fig = px.bar(df, x=x, y=y, orientation=orient, color=color)
     fig.update_layout(xaxis_title = "Food Groups", yaxis={'visible': False, 'showticklabels': False}, xaxis={'categoryorder':'total descending'},  autosize = True)
@@ -20,6 +22,8 @@ def makeHistogram(df: DataFrame, x: str, color: str, xaxis: str, width: int) -> 
     fig.update_layout(xaxis_title = xaxis, yaxis_title = "Count", bargap=0.05, autosize = True)
 
     return fig
+
+#===========================================================================================================#
 
 def makeAvgIntakeGraphs(df: DataFrame) -> list:
     figdailycal = makeAvgBar(df.date, df.dailycal, 'rgb(46, 184, 46)', "Daily Caloric Intake", 450)
@@ -58,6 +62,8 @@ def makeAvgMealGraphs(df: DataFrame) -> list:
     }]
     return(data)
 
+#===========================================================================================================#
+
 def makeIntakeHistograms(df: DataFrame) -> list:
     figdailycal = makeHistogram(df, "dailycal", ['rgb(46, 184, 46)'], "Caloric Intake", 450)
 
@@ -67,12 +73,12 @@ def makeIntakeHistograms(df: DataFrame) -> list:
 
     figsteps = makeHistogram(df, "steps", ['rgb(51, 204, 51)'], "Steps Taken Daily", 450)
 
-    data = [{
+    data = {
          "dailycalplot": loads(figdailycal.to_json()),
          "sleepplot": loads(figsleep.to_json()),
          "waterplot": loads(figwater.to_json()),
          "stepsplot": loads(figsteps.to_json()),
-    }]
+    }
     return(data)
 
 def makeFoodHistograms(df: DataFrame) -> list:
@@ -86,11 +92,11 @@ def makeFoodHistograms(df: DataFrame) -> list:
     
     figwaste = makeHistogram(df, "waste", ['rgb(102, 0, 51)'], "Waste", 450)
 
-    data = [{
+    data = {
         "fatplot": loads(figfat.to_json()),
         "carbsplot": loads(figcarbs.to_json()),
         "proteinsplot": loads(figproteins.to_json()),
         "calplot": loads(figcal.to_json()),
         "wasteplot": loads(figwaste.to_json())
-    }]
+    }
     return(data)

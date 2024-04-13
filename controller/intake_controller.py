@@ -1,6 +1,8 @@
 from .chartmaker_controller import makeAvgIntakeGraphs, makeIntakeHistograms 
 from .intakedata_controller import getIntakeCount, getIntakeCountSex
 
+#===========================================================================================================#
+
 # def getAvgIntakeWeek():
 #     df = getAvgIntakeDataWeek()
 #     charts = makeAvgIntakeGraphs(df)
@@ -13,6 +15,7 @@ from .intakedata_controller import getIntakeCount, getIntakeCountSex
 
 #     return(charts)
 
+#===========================================================================================================#
 
 def getIntakePlotDaily():
     df = getIntakeCount("daily")
@@ -32,6 +35,8 @@ def getIntakePlotMonthly():
 
     return charts
 
+#===========================================================================================================#
+
 def getIntakePlotDailySex(sex: str):
     df = getIntakeCountSex(sex, "daily")
     charts = makeIntakeHistograms(df)
@@ -50,3 +55,4 @@ def getIntakePlotMonthlySex(sex: str):
 
     return charts
 
+#===========================================================================================================#

@@ -114,3 +114,6 @@ def getMealStatsMonthly():
         }}]
     find = (meals.aggregate(pipeline)) 
     return(loads(dumps(find)))
+
+def getUserCount():
+    return(users.count_documents({})) 
