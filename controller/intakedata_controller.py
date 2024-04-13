@@ -78,17 +78,6 @@ def getAvgIntakeData1Month():
 
     return(df)
 
-def getAvgIntakeData3Month():
-    pipeline = [
-        getDateInterval("3month"),
-        avgintakegroup
-    ]
-    df = (intakes.aggregate_pandas_all(pipeline,  schema = AvgIntakeSchema))
-    df = df.rename(columns={'_id':'date'})
-    df['date'] = pd.to_datetime(df['date'], format="%Y-%m-%d").dt.date
-    df = df.sort_values(by='date')
-
-    return(df)
 
 def getIntakeCount(interval: str):
     if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):

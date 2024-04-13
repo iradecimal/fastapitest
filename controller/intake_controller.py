@@ -13,11 +13,6 @@ from .intakedata_controller import getIntakeCount, getIntakeCountSex
 
 #     return(charts)
 
-# def getAvgIntake3Month():
-#     df = getAvgIntakeData3Month()
-#     charts = makeAvgIntakeGraphs(df)
-
-#     return(charts)
 
 def getIntakePlotDaily():
     df = getIntakeCount("daily")

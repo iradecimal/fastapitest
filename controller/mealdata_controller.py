@@ -67,6 +67,7 @@ def getFoodGroupsDataSex(sex: str, interval: str):
     ]
     df = (meals.aggregate_pandas_all(pipeline, schema = FoodGroupsSchema))
     df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
+    df.sort_values(by=['Food Group'], inplace=True, ascending=True)
 
     return df
 
@@ -79,6 +80,7 @@ def getFoodGroupsData(interval: str):
     ]
     df = (meals.aggregate_pandas_all(pipeline, schema = FoodGroupsSchema))
     df = df.rename(columns={'_id': 'Food Group', 'count': 'Count'})
+    df.sort_values(by=['Food Group'], inplace=True, ascending=True)
 
     return df
 
