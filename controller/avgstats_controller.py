@@ -2,15 +2,24 @@ from db import intakes, meals, users
 from datetime import date, datetime, timedelta
 from bson.json_util import loads, dumps
 from pymongoarrow.api import Schema
+from .intakedata_controller import getDateInterval
+from .mealdata_controller import getDatetimeInterval
 
-AvgIntakeSchema = Schema({'hale': float, 'phd': float, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
-AvgFoodSchema = Schema({'fat': float, 'carbs': float, 'protein': float, 'cal': float, 'waste': float})
+lookupUser = { '$lookup': {
+        'from': "users",
+        'localField': "uid",
+        'foreignField': "_id",
+        'as': "user_data",
+}}
 
-def getIntakeStatsDaily():
-    #dateToday = date.today().isoformat()
-    dateToday = date.fromisoformat("2023-11-23")
+#AvgIntakeSchema = Schema({'hale': float, 'phd': float, 'waterglass': float, 'sleephrs': float, 'dailycal': float, 'steps': float})
+#AvgFoodSchema = Schema({'fat': float, 'carbs': float, 'protein': float, 'cal': float, 'waste': float})
+
+def getIntakeStats(interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-    { '$match': {'date': dateToday.isoformat()}},    
+        getDateInterval(interval),    
     { '$group': {
             "_id": None,
             "hale": {'$avg': '$hale'},
@@ -20,15 +29,29 @@ def getIntakeStatsDaily():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    find = (intakes.aggregate(pipeline)) 
-    return(loads(dumps(find)))
+    find = list(intakes.aggregate(pipeline)) 
+    
+    data = {
+        'avg' : find[0],
+        'adequacy': {
+            "steps" : round(((find[0]['steps'] / 10000)*100), 2),
+            "sleephrs" : round(((find[0]['sleephrs'] / 8)*100), 2),
+            "waterglass" : round(((find[0]['waterglass'] / 9)*100), 2),
+            "dailycal" : round(((find[0]['dailycal'] / 2230)*100), 2),
+        }}
 
-def getIntakeStatsWeekly():
-    #dateToday = date.today()
-    dateToday = date.fromisoformat("2023-11-23")
-    dateLastWeek = dateToday - timedelta(days=7) 
+    return(data)
+
+def getIntakeStatsSex(sex: str, interval: str):
+    if (sex != 'M' and sex != 'F'):
+        raise ValueError("Wrong sex was sent. Please check for capitalization/spelling errors.")
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-    { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateLastWeek.isoformat()}}},    
+        getDateInterval(interval),
+        lookupUser, 
+        { '$unwind': '$user_data'},
+        { '$match': { 'user_data.sex' : sex}},   
     { '$group': {
             "_id": None,
             "hale": {'$avg': '$hale'},
@@ -38,35 +61,25 @@ def getIntakeStatsWeekly():
             'waterglass': {'$avg': '$waterglass'},
             'dailycal': {'$avg': '$dailycal'},
         }}]
-    find = (intakes.aggregate(pipeline)) 
-    return(loads(dumps(find)))
+    find = list(intakes.aggregate(pipeline)) 
+    
+    data = {
+        'avg' : find[0],
+        'adequacy': {
+            "steps" : round(((find[0]['steps'] / 10000)*100), 2),
+            "sleephrs" : round(((find[0]['sleephrs'] / 8)*100), 2),
+            "waterglass" : round(((find[0]['waterglass'] / 9)*100), 2),
+            "dailycal" : round(((find[0]['dailycal'] / 2230)*100), 2),
+        }}
+
+    return(data)
 
 
-def getIntakeStatsMonthly(): 
-    #dateToday = date.today()
-    dateToday = date.fromisoformat("2023-11-23")
-    dateLastMonth = dateToday - timedelta(weeks=4)
+def getMealStats(interval: str):
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-    { '$match': {'date': { '$lte': dateToday.isoformat(), '$gte': dateLastMonth.isoformat()}}},    
-    { '$group': {
-            "_id": None,
-            "hale": {'$avg': '$hale'},
-            'phd': {'$avg': '$phd'},
-            'steps': {'$avg': '$steps'},
-            'sleephrs': {'$avg': '$sleephrs'},
-            'waterglass': {'$avg': '$waterglass'},
-            'dailycal': {'$avg': '$dailycal'},
-        }}]
-    find = (intakes.aggregate(pipeline)) 
-    return(loads(dumps(find)))
-
-def getMealStatsDaily():
-    #dateToday = date.today().isoformat()
-    dateToday = date.fromisoformat("2023-11-23")
-    datetimeToday = datetime.fromisoformat(dateToday.isoformat())
-    datetimeYesterday = datetimeToday - timedelta(days=1)
-    pipeline = [
-    { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeYesterday}}},    
+        getDatetimeInterval(interval),   
     { '$group': {
             "_id": None,
             'fat': {'$avg': '$fat'},
@@ -75,45 +88,52 @@ def getMealStatsDaily():
             'cal': {'$avg': '$cal'},
             'waste': {'$avg': '$waste'},
         }}]
-    find = (meals.aggregate(pipeline)) 
-    return(loads(dumps(find)))
+    find = list(meals.aggregate(pipeline)) 
 
+    data = {
+        'avg' : find[0],
+        'adequacy' : {
+            "fat" : round(((find[0]['fat'] / 19)*100), 2),
+            "carbs" : round(((find[0]['carbs'] / 80)*100), 2),
+            "proteins" : round(((find[0]['proteins'] / 23)*100), 2),
+            "cal" : round(((find[0]['cal'] / 740)*100), 2),
+            "waste" : round(((find[0]['waste'] / 40)*100), 2),
+        }}
+    return(data)
 
-def getMealStatsWeekly():
-    #dateToday = date.today()
-    dateToday = date.fromisoformat("2023-11-23")
-    datetimeToday = datetime.fromisoformat(dateToday.isoformat())
-    datetimeLastWeek = datetimeToday - timedelta(days=7)
+def getMealStatsSex(sex: str, interval: str):
+    if (sex != 'M' and sex != 'F'):
+        raise ValueError("Wrong sex was sent. Please check for capitalization/spelling errors.")
+    if (interval != 'daily' and interval != 'weekly' and interval != 'monthly'):
+        raise ValueError("Wrong interval was sent. Please check for capitalization/spelling errors.")
     pipeline = [
-    { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeLastWeek}}},
-    { '$group': {
-            "_id": None,
-            'fat': {'$avg': '$fat'},
-            'carbs': {'$avg': '$carbs'},
-            'proteins': {'$avg': '$proteins'},
-            'cal': {'$avg': '$cal'},
-            'waste': {'$avg': '$waste'},
-        }}]
-    find = (meals.aggregate(pipeline)) 
-    return(loads(dumps(find)))
+        getDatetimeInterval(interval),
+        lookupUser, 
+        { '$unwind': '$user_data'},
+        { '$match': { 'user_data.sex' : sex}},
+        { '$group': {
+                "_id": None,
+                'fat': {'$avg': '$fat'},
+                'carbs': {'$avg': '$carbs'},
+                'proteins': {'$avg': '$proteins'},
+                'cal': {'$avg': '$cal'},
+                'waste': {'$avg': '$waste'},
+            }}]
+    find = list(meals.aggregate(pipeline)) 
 
-def getMealStatsMonthly():
-    #dateToday = date.today()
-    dateToday = date.fromisoformat("2023-11-23")
-    datetimeToday = datetime.fromisoformat(dateToday.isoformat())
-    datetimeLastMonth = datetimeToday - timedelta(weeks=4)
-    pipeline = [
-    { '$match': {'datetime': { '$lte': datetimeToday, '$gte': datetimeLastMonth}}},      
-    { '$group': {
-            "_id": None,
-            'fat': {'$avg': '$fat'},
-            'carbs': {'$avg': '$carbs'},
-            'proteins': {'$avg': '$proteins'},
-            'cal': {'$avg': '$cal'},
-            'waste': {'$avg': '$waste'},
-        }}]
-    find = (meals.aggregate(pipeline)) 
-    return(loads(dumps(find)))
+    data = {
+        'avg' : find[0],
+        'adequacy' : {
+            "fat" : round(((find[0]['fat'] / 19)*100), 2),
+            "carbs" : round(((find[0]['carbs'] / 80)*100), 2),
+            "proteins" : round(((find[0]['proteins'] / 23)*100), 2),
+            "cal" : round(((find[0]['cal'] / 740)*100), 2),
+            "waste" : round(((find[0]['waste'] / 40)*100), 2),
+        }}
+    return(data)
+
+
+
 
 def getUserCount():
     return(users.count_documents({})) 

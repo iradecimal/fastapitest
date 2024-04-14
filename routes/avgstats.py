@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from controller.avgstats_controller import getIntakeStatsDaily, getIntakeStatsWeekly, getIntakeStatsMonthly, getMealStatsDaily, getMealStatsWeekly, getMealStatsMonthly, getUserCount
+from controller.avgstats_controller import getIntakeStats, getMealStats, getUserCount
 
 router = APIRouter(
     prefix="/avgstats"
@@ -9,29 +9,29 @@ router = APIRouter(
 
 @router.get("/daily/intake")
 async def get_daily_intake_stats():
-    return getIntakeStatsDaily()
+    return getIntakeStats("daily")
 
 @router.get("/weekly/intake")
 async def get_weekly_intake_stats():
-    return getIntakeStatsWeekly()
+    return getIntakeStats("weekly")
 
 @router.get("/monthly/intake")
 async def get_monthly_intake_stats():
-    return getIntakeStatsMonthly()
+    return getIntakeStats("monthly")
 
 #===========================================================================================================#
 
 @router.get("/daily/meals")
 async def get_daily_meal_stats():
-    return getMealStatsDaily()
+    return getMealStats("daily")
 
 @router.get("/weekly/meals")
 async def get_weekly_intake_stats():
-    return getMealStatsWeekly()
+    return getMealStats("weekly")
 
 @router.get("/monthly/meals")
 async def get_monthly_meal_stats():
-    return getMealStatsMonthly()
+    return getMealStats("monthly")
 
 #===========================================================================================================#
 

@@ -35,11 +35,9 @@ def is_date(querystr: str) -> bool:
 
 def cleanFindQuery(query: str):
     operator = re.match(querypattern, query)
-    print(operator)
     querydict = {}
     if operator:
         splitquery = re.split(r'=', query)
-        print(splitquery)
         if is_number(splitquery[1]):
             querydict.update({splitquery[0] : float(splitquery[1])})
         elif is_date(splitquery[1]):
@@ -86,7 +84,6 @@ def sortQuery(query: str):
     if ';' in query:
         querylist = []
         splitquery = re.split(r';', query)
-        print(splitquery)
         for sortquery in splitquery:
             querylist.append(cleanSortQuery(sortquery))
         return(querylist)

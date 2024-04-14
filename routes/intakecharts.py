@@ -23,29 +23,29 @@ router = APIRouter(
 @router.get("/count/daily/")
 async def get_intake_count_daily(sex: Annotated[str | None, Query(max_length=1)] = None):
     if sex:
-        if sex == "m":
+        if sex == "f":
             return getIntakePlotDailySex('F')
-        elif sex == "f":
+        elif sex == "m":
             return getIntakePlotDailySex('M')
     else:
         return getIntakePlotDaily()
 
-@router.get("/count/weekly")
+@router.get("/count/weekly/")
 async def get_intake_count_weekly(sex: Annotated[str | None, Query(max_length=1)] = None):
     if sex:
-        if sex == "m":
+        if sex == "f":
             return getIntakePlotWeeklySex('F')
-        elif sex == "f":
+        elif sex == "m":
             return getIntakePlotWeeklySex('M')
     else:
         return getIntakePlotWeekly()
 
-@router.get("/count/monthly")
+@router.get("/count/monthly/")
 async def get_intake_count_monthly(sex: Annotated[str | None, Query(max_length=1)] = None):
     if sex:
-        if sex == "m":
+        if sex == "f":
             return getIntakePlotMonthlySex('F')
-        elif sex == "f":
+        elif sex == "m":
             return getIntakePlotMonthlySex('M')
     else:
         return getIntakePlotMonthly()

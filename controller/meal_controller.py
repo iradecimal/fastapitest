@@ -41,21 +41,21 @@ def getFoodGroupsMonthly():
 
 def getFoodGroupsDailySex(sex: str):
     df = getFoodGroupsDataSex(sex, 'daily')
-    fig = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
+    charts = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
 
-    return(loads(fig.to_json()))
+    return(charts)
  
 def getFoodGroupsWeeklySex(sex: str):
     df = getFoodGroupsDataSex(sex, 'weekly')
-    fig = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
+    charts = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
 
-    return(loads(fig.to_json()))
+    return(charts)
 
 def getFoodGroupsMonthlySex(sex: str):
     df = getFoodGroupsDataSex(sex, 'monthly')
-    fig = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
+    charts = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
     
-    return(loads(fig.to_json()))
+    return(charts)
 
 #===========================================================================================================#
 
