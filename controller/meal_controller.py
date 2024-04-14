@@ -21,21 +21,21 @@ foodgroupcolors = {
 
 def getFoodGroupsDaily():
     df = getFoodGroupsData('daily')
-    fig = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
+    charts = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
 
-    return(loads(fig.to_json()))
+    return(charts)
 
 def getFoodGroupsWeekly():
     df = getFoodGroupsData('weekly')
-    fig = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
+    charts = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
 
-    return(loads(fig.to_json()))
+    return(charts)
 
 def getFoodGroupsMonthly():
     df = getFoodGroupsData('monthly')
-    fig = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
+    charts = makeFoodGroupCharts(df, "Count", "Food Group", "h", foodgroupcolors)
     
-    return(loads(fig.to_json()))
+    return(charts)
 
 #===========================================================================================================#
 

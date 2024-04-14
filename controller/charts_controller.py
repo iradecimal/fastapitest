@@ -25,6 +25,7 @@ def makeFoodGroupCharts(df: DataFrame, x: str, y: str, orient: str, palette: dic
     figbar.update_layout(xaxis_title = "Food Groups", yaxis={'visible': False, 'showticklabels': False}, xaxis={'categoryorder':'total descending'},  autosize = True)
 
     figpie = go.Figure(px.pie(df, values='Count',names='Food Group', color='Food Group', color_discrete_map = palette))
+    figbar.update_layout(autosize=True)    
     figpie.update_traces(hoverinfo='label+percent', textinfo='none',  sort = False)
 
     data = {
